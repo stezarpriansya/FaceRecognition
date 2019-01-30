@@ -34,5 +34,3 @@ Visualization hotkeys:
 *   b - toggle bounding box
 *   i - toggle id
 *   f - toggle frames per second
-
-![alt text](https://github.com/habrman/FaceRecognition/blob/master/example.png)

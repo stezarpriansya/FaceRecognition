@@ -1,13 +1,15 @@
+import argparse
+import os
+import time
+
+import cv2
+import numpy as np
+import tensorflow as tf
+from scipy import misc
 from sklearn.metrics.pairwise import pairwise_distances
 from tensorflow.python.platform import gfile
-from scipy import misc
-import tensorflow as tf
-import numpy as np
+
 import detect_and_align
-import argparse
-import time
-import cv2
-import os
 
 
 class IdData():
@@ -48,7 +50,9 @@ class IdData():
                       " you can solve it by increasing the thresolds of the cascade network")
             aligned_images = aligned_images + face_patches
             id_image_paths += [image_path] * len(face_patches)
-            self.id_names += [image_path.split('/')[-2]] * len(face_patches)
+            # self.id_names += [image_path.split('/')[-2]] * len(face_patches) #Versi lama
+            self.id_names += [os.path.dirname(image_path).split('/')[-1]] * len(face_patches)
+            # print("INI NAMANYA "+image_path)
 
         return np.stack(aligned_images), id_image_paths
 
@@ -110,7 +114,7 @@ def main(args):
             frame_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
             show_landmarks = False
-            show_bb = False
+            show_bb = True
             show_id = True
             show_fps = False
             while(True):
@@ -181,6 +185,5 @@ if __name__ == '__main__':
 
     parser.add_argument('model', type=str, help='Path to model protobuf (.pb) file')
     parser.add_argument('id_folder', type=str, nargs='+', help='Folder containing ID folders')
-    parser.add_argument('-t', '--threshold', type=float,
-        help='Distance threshold defining an id match', default=1.2)
+    parser.add_argument('-t', '--threshold', type=float, help='Distance threshold defining an id match', default=1.2)
     main(parser.parse_args())
